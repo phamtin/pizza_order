@@ -6,7 +6,7 @@ const PizzaDetail = props => {
         return <img className="mr-5 mb-5" key={image} src={url} alt="" />;
     });
 
-    return <div className="PizzaDetail">{renderImage}</div>;
+    return <div className="Pizza-detail">{renderImage}</div>;
 };
 
 export default PizzaDetail;

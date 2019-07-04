@@ -1,19 +1,18 @@
-export const increasePizza = () => {
-    //Return an action
+export const increasePizza = (title, price) => {
     return {
-        type: "INCREASE_PIZZA"
+        type: "INCREASE_PIZZA",
+        payload: { option: "render", title: title, price: price }
     };
 };
 
-export const decreasePizza = () => {
-    //Return an action
+export const decreasePizza = (title, price, amount) => {
     return {
-        type: "DECREASE_PIZZA"
+        type: "DECREASE_PIZZA",
+        payload: { option: "remove", title: title, price: price, amount: amount }
     };
 };
 
 export const resetPizza = () => {
-    //Return an action
     return {
         type: "RESET_PIZZA"
     };

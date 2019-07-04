@@ -1,42 +1,38 @@
 import React from "react";
+import { connect } from "react-redux";
+import { increasePizza, decreasePizza } from "../actions/index";
 
 class Pizza extends React.Component {
-    state = { amount: 0, reset: true };
+    state = { amount: 0, reset: false };
 
-    decrementAmount = e => {
-        e.preventDefault();
-        if (this.state.amount > 0) {
-            const newAmount = this.state.amount - 1;
-            this.setState({ amount: newAmount });
-        }
-        if (this.state.amount === 1) {
-            this.manipulatePizza(this.props.title, "remove");
-        }
-    };
-    incrementAmount = e => {
-        e.preventDefault();
+    increase = () => {
         if (this.state.amount < 10) {
-            const newAmount = this.state.amount + 1;
-            this.setState({ amount: newAmount });
-        }
-        this.manipulatePizza(this.props.title, "render");
-    };
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.amount > prevState.amount) {
-            this.props.calTotal(this.props.price, "plus");
-        } else if (this.state.amount < prevState.amount) {
-            if (!this.props.reset) {
-                this.props.calTotal(this.props.price, "minus");
-            }
-        }
-    }
+            this.setState({
+                amount: this.state.amount + 1
+            });
 
-    manipulatePizza = (pizza, option) => {
-        this.props.manipulatePizza(pizza, option);
+            const title = this.props.title;
+            const price = this.props.price;
+            this.props.increasePizza(title, price);
+        }
     };
 
-    componentWillReceiveProps(props) {
-        if (props.reset === true) {
+    decrease = () => {
+        if (this.state.amount > 0) {
+            this.setState({
+                amount: this.state.amount - 1
+            });
+            const title = this.props.title;
+            const price = this.props.price;
+            const amount = this.state.amount;
+            // if (this.state.amount === 1) {
+            this.props.decreasePizza(title, price, amount);
+            // }
+        }
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.reset === true) {
             this.setState({ amount: 0 });
         }
     }
@@ -51,7 +47,7 @@ class Pizza extends React.Component {
                 <div className="col-sm-6">
                     <div className="input-group">
                         <span className="input-group-btn">
-                            <button className="btn btn-danger" onClick={this.decrementAmount}>
+                            <button className="btn btn-danger" onClick={this.decrease}>
                                 <span className="glyphicon glyphicon-minus">
                                     <strong>-</strong>
                                 </span>
@@ -59,7 +55,7 @@ class Pizza extends React.Component {
                         </span>
                         <div className="px-2 py-1 mt-1 border">{this.state.amount}</div>
                         <span className="input-group-btn">
-                            <button className="btn btn-success" onClick={this.incrementAmount}>
+                            <button className="btn btn-success" onClick={this.increase}>
                                 <span className="glyphicon glyphicon-plus">
                                     <strong>+</strong>
                                 </span>
@@ -72,4 +68,10 @@ class Pizza extends React.Component {
     }
 }
 
-export default Pizza;
+const mapStateToProps = state => {
+    return { amount: state.amount, reset: state.reset };
+};
+export default connect(
+    mapStateToProps,
+    { increasePizza, decreasePizza }
+)(Pizza);
